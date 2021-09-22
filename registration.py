@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 23 16:37:02 2019
-SIFT
-@author: youxinlin
-"""
-
 import numpy as np
 import cv2
 import imutils
