@@ -18,12 +18,23 @@ def registration(img1, img2):   # img1为原始图像，img2为待配准图像
         for m, n in matches:
             if m.distance < 0.75 * n.distance:
                 good.append(m)
-        return good
+        return good, matches
 
     def siftImageAlignment(img1, img2):
-        _, kp1, des1 = sift_kp(img1)
-        _, kp2, des2 = sift_kp(img2)
-        goodMatch = get_good_match(des1, des2)
+        f1, kp1, des1 = sift_kp(img1)
+        f2, kp2, des2 = sift_kp(img2)
+        goodMatch, matches = get_good_match(des1, des2)
+
+        # # 显示特征点以及连接
+        # cv2.namedWindow('feature1', cv2.WINDOW_NORMAL)
+        # cv2.namedWindow('feature2', cv2.WINDOW_NORMAL)
+        # cv2.imshow('feature1', f1)
+        # cv2.imshow('feature2', f2)
+        # match_img = cv2.drawMatches(img1, kp1, img2, kp2, goodMatch, None, flags=2)
+        # cv2.imshow('match', match_img)
+        # cv2.waitKey(0)
+        # # 显示end
+
         if len(goodMatch) > 4:
             ptsA = np.float32([kp1[m.queryIdx].pt for m in goodMatch]).reshape(-1, 1, 2)
             ptsB = np.float32([kp2[m.trainIdx].pt for m in goodMatch]).reshape(-1, 1, 2)
@@ -40,9 +51,12 @@ def registration(img1, img2):   # img1为原始图像，img2为待配准图像
     allImg = np.concatenate((img1, img2, result), axis=1)
     return result
 
+
 def main():
-    img1 = cv2.imread('Lena.bmp')
-    img2 = cv2.imread('Lena.bmp')
+    img1 = cv2.imread('./imgs/rgb/Lena.bmp')
+    img2 = cv2.imread('./imgs/rgb/Lena.bmp')
+
+    # 旋转构建浮动图像
     img2 = imutils.rotate(img2, 30)
 
     # 补充实验1
